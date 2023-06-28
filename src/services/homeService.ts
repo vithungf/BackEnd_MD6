@@ -8,20 +8,29 @@ class HomeService {
         this.homeRepository = AppDataSource.getRepository(Home);
     }
 
-    async createHome(newHome) {
-        try {
-            let home = await this.homeRepository.save(newHome);
-            await imageService.createImage(home.idHome, newHome.Image);
-            let homeRes= await this.homeRepository.findOneBy({
-                where: { idHome: home.idHome },
-                relations: {
-                    image: true,
-                },})
-            return homeRes;
-        } catch (e) {
-            console.log(e, "at createHome");
-        }
-    }
+    // async createHome(newHome) {
+    //     try {
+    //         console.log(newHome,1111)
+    //         let home = await this.homeRepository.save(newHome);
+    //         console.log(home,22222)
+    //         await imageService.createImage(home.idHome, newHome.image);
+    //         // console.log(img)
+    //         let homeRes = await this.homeRepository.findOne({
+    //             where: { idHome: home.idHome },
+    //             relations: {
+    //                 image: true,
+    //             },
+    //         });
+    //         console.log("service", homeRes)
+    //         return homeRes;
+    //     } catch (e) {
+    //         console.log(e, "at createHome");
+    //     }
+    // }
+    save = async (home) => {
+        console.log(home)
+        return this.homeRepository.save(home);
+    };
 
     async getAllHome() {
         try {
@@ -48,9 +57,17 @@ class HomeService {
         }
     }
 
-    async getHome(userId) {
+    async getHome(idHome) {
         try {
-            return await this.homeRepository.find();
+            return await this.homeRepository.findOne({
+                relations: {
+                    image: true,
+                    user : true
+                },
+                where: {
+                    idHome: `${idHome}`,
+                },
+            });
         } catch (e) {
             console.log(e, "at getHomeByUser ");
         }
@@ -60,7 +77,13 @@ class HomeService {
         try {
             let home = await this.homeRepository.findOneBy({ idHome: id });
             home = { ...home, ...newHome };
-            return await this.homeRepository.save(home);
+            let resHome= await this.homeRepository.save(home);
+            return  await this.homeRepository.find({
+                where: { idHome: resHome.idHome},
+                relations: {
+                    image: true,
+                },
+            });
         } catch (e) {
             console.log(e);
         }

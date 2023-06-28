@@ -4,5 +4,7 @@ export const homeRouter = Router();
 
 homeRouter.get('/',homeController.getAllHome)
 homeRouter.get('/user/:id',homeController.getHomeByUserId)
-homeRouter.post('/',homeController.createHome)
+homeRouter.post("", homeController.createHome);
 homeRouter.put('/:id',homeController.updateHome)
+homeRouter.get("/images", homeController.getImages);
+homeRouter.get("/images/:idHome", homeController.getImagesByIdHome);
