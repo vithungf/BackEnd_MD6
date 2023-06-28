@@ -17,5 +17,9 @@ class ImageService {
         let sql = `select * from image where idHome = ${idHome}`;
         return await this.imageRepository.query(sql);
     }
+    async createImage(home,image){
+        const newImage ={home:home,image:image}
+        await this.imageRepository.save(newImage);
+    }
 }
 export default new ImageService();

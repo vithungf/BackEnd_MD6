@@ -7,7 +7,7 @@ class HomeController {
     constructor() {}
     createHome = async (req: Request, res: Response) => {
         try {
-            let homes = await homeService.save(req.body);
+            let homes = await homeService.createHome(req.body);
             return res.status(200).json(homes);
         } catch (e) {
             res.status(500).json(e.message);

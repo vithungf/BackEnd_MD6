@@ -8,25 +8,24 @@ class HomeService {
         this.homeRepository = AppDataSource.getRepository(Home);
     }
 
-    // async createHome(newHome) {
-    //     try {
-    //         console.log(newHome,1111)
-    //         let home = await this.homeRepository.save(newHome);
-    //         console.log(home,22222)
-    //         await imageService.createImage(home.idHome, newHome.image);
-    //         // console.log(img)
-    //         let homeRes = await this.homeRepository.findOne({
-    //             where: { idHome: home.idHome },
-    //             relations: {
-    //                 image: true,
-    //             },
-    //         });
-    //         console.log("service", homeRes)
-    //         return homeRes;
-    //     } catch (e) {
-    //         console.log(e, "at createHome");
-    //     }
-    // }
+    async createHome(newHome) {
+        try {
+            let home = await this.homeRepository.save(newHome);
+            for (let i = 0; i < newHome.image.length; i++) {
+                await imageService.createImage(home.idHome, newHome.image[i]);
+            }
+            let homeRes = await this.homeRepository.findOne({
+                where: { idHome: home.idHome },
+                relations: {
+                    image: true,
+                },
+            });
+            console.log("service", homeRes)
+            return homeRes;
+        } catch (e) {
+            console.log(e, "at createHome");
+        }
+    }
     save = async (home) => {
         console.log(home)
         return this.homeRepository.save(home);
